@@ -24,6 +24,8 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  bool currentSource = true;
+  int _offset = 10;
   //final itemKey = GlobalKey();
   bool _pinned = true;
   bool _snap = false;
@@ -42,15 +44,50 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
 //
-    final _itemExtent = 56.0;
-    final generatedList = List.generate(500, (index) => 'Item $index');
+    final int _offSetInitial = 10;
+    final int _offSetNew = 30;
+    // final _offSetNew2 = 40;
 
-//
+    final _itemExtent = 100.0; //height of each container/card
+    final generatedList = List.generate(50, (index) => 'Item $index');
+
+    print('offset is');
+    print(_offset);
+
+    print('offset');
+    print(_offset);
+    print('in scaffold');
+
     return Scaffold(
       body: CustomScrollView(
         ///
-        controller: ScrollController(initialScrollOffset: _itemExtent * 401),
 
+        /*   controller: ScrollController(
+            initialScrollOffset: _itemExtent *
+                _offset), //  //sets starting point, as multiple of the height of the containers/cards
+        */
+        /*  controller: ScrollController(
+            initialScrollOffset: _offset == null
+                ? _itemExtent * _offSetInitial
+                : (_offset != _offSetInitial
+                    ? _itemExtent * _offSetNew
+                    : _itemExtent * _offSetNew2)),
+           */
+        controller:
+            ScrollController(initialScrollOffset: _itemExtent * _offset),
+/*
+         if {
+      print('in if');
+      _offset = _offSetInitial;
+      controller:
+      ScrollController(initialScrollOffset: _itemExtent * _offset);
+    } else {
+      print('in else');
+      _offset = _offSetNew;
+      controller:
+      ScrollController(initialScrollOffset: _itemExtent * _offset); //
+    } */
+        //
         ///
         slivers: <Widget>[
           SliverAppBar(
@@ -121,12 +158,40 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ],
       ),
       //flating action button, set for jumping to the top (zero) or what ever you choose.
-      /*  floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         //corner button for user to scroll to...
         child: Icon(Icons.arrow_upward), //visual button.
-        onPressed: () => scrollToItem(
-            0), 
-      ), */
+
+        /*    //reloads the page
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyApp()),
+          );
+        }, */
+
+//suppose to reload, but does not seem too...
+        /*   onPressed: () => {
+                _offset = _offSetNew,
+                print(
+                    'button pressed a'), //do something with the variables declared elsewhere
+                print(_offset),
+                setState(() {}),
+                print(
+                    'button pressed b'), //do something with the variables declared elsewhere
+                print(_offset),
+              } */
+
+        ///end of reloading page to return to the top....
+
+        onPressed: () {
+          print('button pressed b');
+
+          setState(() {
+            _offset = _offSetNew;
+          });
+        },
+      ),
 
       //buttom navigation bar, if dispalyed
       bottomNavigationBar: BottomAppBar(
