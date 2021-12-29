@@ -24,16 +24,34 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  //final itemKey = GlobalKey();
   bool _pinned = true;
   bool _snap = false;
   bool _floating = false;
-
 // [SliverAppBar]s are typically used in [CustomScrollView.slivers], which in
 // turn can be placed in a [Scaffold.body].
+
+  //design specifics for jumping to the index
+  @override
+  void initState() {
+    super.initState();
+  }
+  //end of design parameters.
+
+//main screen design
   @override
   Widget build(BuildContext context) {
+//
+    final _itemExtent = 56.0;
+    final generatedList = List.generate(500, (index) => 'Item $index');
+
+//
     return Scaffold(
       body: CustomScrollView(
+        ///
+        controller: ScrollController(initialScrollOffset: _itemExtent * 401),
+
+        ///
         slivers: <Widget>[
           SliverAppBar(
             pinned:
@@ -75,22 +93,42 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
           ),
-          SliverList(
+          //        SliverList(
+          ///
+          SliverFixedExtentList(
+            itemExtent: _itemExtent, // I'm forcing item heights
+            ///
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Container(
                   color: index.isOdd ? Colors.white : Colors.black12,
                   height: 100.0,
                   child: Center(
-                    child: Text('$index', textScaleFactor: 5),
+                    child: //Text('$index', textScaleFactor: 5),
+                        ////
+                        Text(
+                      generatedList[index],
+                      style: TextStyle(fontSize: 20.0),
+                      ////
+                    ),
                   ),
                 );
               },
-              childCount: 20,
+              childCount:
+                  generatedList.length, // 200, //the limit of builds of index
             ),
           ),
         ],
       ),
+      //flating action button, set for jumping to the top (zero) or what ever you choose.
+      /*  floatingActionButton: FloatingActionButton(
+        //corner button for user to scroll to...
+        child: Icon(Icons.arrow_upward), //visual button.
+        onPressed: () => scrollToItem(
+            0), 
+      ), */
+
+      //buttom navigation bar, if dispalyed
       bottomNavigationBar: BottomAppBar(
         child: Padding(
           padding: const EdgeInsets.all(8),
