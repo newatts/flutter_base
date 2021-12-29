@@ -24,29 +24,41 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  bool currentSource = true;
-  int _offset = 10;
+  int _offset = 0;
   //final itemKey = GlobalKey();
   bool _pinned = true;
   bool _snap = false;
   bool _floating = false;
+
+  void _changeOffset() {
+    print('here');
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) =>
+    setState(() {
+      _offset = 30;
+
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+    });
+  }
+
 // [SliverAppBar]s are typically used in [CustomScrollView.slivers], which in
 // turn can be placed in a [Scaffold.body].
 
   //design specifics for jumping to the index
-  @override
+  /*  @override
   void initState() {
     super.initState();
-  }
+  } */
   //end of design parameters.
 
 //main screen design
   @override
   Widget build(BuildContext context) {
 //
-    final int _offSetInitial = 10;
-    final int _offSetNew = 30;
-    // final _offSetNew2 = 40;
 
     final _itemExtent = 100.0; //height of each container/card
     final generatedList = List.generate(50, (index) => 'Item $index');
@@ -61,6 +73,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Scaffold(
       body: CustomScrollView(
         ///
+        controller:
+            ScrollController(initialScrollOffset: _itemExtent * _offset),
 
         /*   controller: ScrollController(
             initialScrollOffset: _itemExtent *
@@ -73,8 +87,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     ? _itemExtent * _offSetNew
                     : _itemExtent * _offSetNew2)),
            */
-        controller:
-            ScrollController(initialScrollOffset: _itemExtent * _offset),
+
 /*
          if {
       print('in if');
@@ -161,7 +174,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       floatingActionButton: FloatingActionButton(
         //corner button for user to scroll to...
         child: Icon(Icons.arrow_upward), //visual button.
-
+        onPressed: _changeOffset,
         /*    //reloads the page
         onPressed: () async {
           await Navigator.push(
@@ -183,14 +196,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               } */
 
         ///end of reloading page to return to the top....
-
-        onPressed: () {
-          print('button pressed b');
-
-          setState(() {
-            _offset = _offSetNew;
-          });
-        },
       ),
 
       //buttom navigation bar, if dispalyed
