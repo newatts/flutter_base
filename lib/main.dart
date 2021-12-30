@@ -24,8 +24,12 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  int _offset = 0;
+  double _offset = 0;
+  double _offset1 = 0;
+  double _offset2 = 49;
   //final itemKey = GlobalKey();
+  final _itemExtent = 100.0; //height of each container/card
+  late bool _initFlag;
   bool _pinned = true;
   bool _snap = false;
   bool _floating = false;
@@ -35,7 +39,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     // WidgetsBinding.instance.addPostFrameCallback((_) =>
     setState(() {
-      _offset = 30;
+      _initFlag = false;
+      _offset = _offset2;
 
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -49,10 +54,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 // turn can be placed in a [Scaffold.body].
 
   //design specifics for jumping to the index
-  /*  @override
+  @override
   void initState() {
+    _offset =
+        _offset1; //the inital starting point for the list - prob best to set to zero.
+    _initFlag = true;
     super.initState();
-  } */
+  }
   //end of design parameters.
 
 //main screen design
@@ -60,48 +68,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
 //
 
-    final _itemExtent = 100.0; //height of each container/card
-    final generatedList = List.generate(50, (index) => 'Item $index');
+    final generatedList = List.generate(500, (index) => 'Item $index');
 
     print('offset is');
     print(_offset);
 
-    print('offset');
+    print('initFlag');
+    print(_initFlag);
+
+    _initFlag == true ? _offset = _offset1 : _offset = _offset2;
+
+    print('offset now is');
     print(_offset);
     print('in scaffold');
 
     return Scaffold(
       body: CustomScrollView(
-        ///
         controller:
             ScrollController(initialScrollOffset: _itemExtent * _offset),
-
-        /*   controller: ScrollController(
-            initialScrollOffset: _itemExtent *
-                _offset), //  //sets starting point, as multiple of the height of the containers/cards
-        */
-        /*  controller: ScrollController(
-            initialScrollOffset: _offset == null
-                ? _itemExtent * _offSetInitial
-                : (_offset != _offSetInitial
-                    ? _itemExtent * _offSetNew
-                    : _itemExtent * _offSetNew2)),
-           */
-
-/*
-         if {
-      print('in if');
-      _offset = _offSetInitial;
-      controller:
-      ScrollController(initialScrollOffset: _itemExtent * _offset);
-    } else {
-      print('in else');
-      _offset = _offSetNew;
-      controller:
-      ScrollController(initialScrollOffset: _itemExtent * _offset); //
-    } */
-        //
-        ///
         slivers: <Widget>[
           SliverAppBar(
             pinned:
@@ -143,7 +127,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
           ),
-          //        SliverList(
+          //
           ///
           SliverFixedExtentList(
             itemExtent: _itemExtent, // I'm forcing item heights
@@ -170,18 +154,20 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
         ],
       ),
+
       //flating action button, set for jumping to the top (zero) or what ever you choose.
       floatingActionButton: FloatingActionButton(
         //corner button for user to scroll to...
         child: Icon(Icons.arrow_upward), //visual button.
-        onPressed: _changeOffset,
-        /*    //reloads the page
+        // onPressed: _changeOffset,
+
+        //reloads the page
         onPressed: () async {
           await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MyApp()),
           );
-        }, */
+        },
 
 //suppose to reload, but does not seem too...
         /*   onPressed: () => {
